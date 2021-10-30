@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 19:26:48 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/26 20:06:13 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/10/30 12:32:33 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,26 @@ int check_w(const char *str, int i)
 	return (len);
 }
 
+int check_udicpxX(const char *str, int i)
+{
+	if (str[i] == 'u')
+		return (1);
+	else if (str[i] == 'd')
+		return (1);
+	else if (str[i] == 'i')
+		return (1);
+	else if (str[i] == 'c')
+		return (1);
+	else if (str[i] == 'p')
+		return (1);
+	else if (str[i] == 'x')
+		return (1);
+	else if (str[i] == 'X')
+		return (1);
+	else
+		return (0);
+}
+
 int check_flags(const char *str, int i, t_flags *flags)
 {
 	int fl;
@@ -60,30 +80,18 @@ int check_flags(const char *str, int i, t_flags *flags)
 
 	fl = 0;
 	j = 0;
-	check = "udicsupxX%";
+	check = "udicspxX%";
 	newfl = 0;
 	while (str[i] != check[j++])
 	{
-		if (str[i] == '.' && !flags->wdt)
-		{
-			flags->dot = 1;
-			flags->zero = 1;
-			i++;
-		}
-		while (str[i] == '0' && !flags->wdt)
+		while (str[i] == '0')
 		{
 			flags->zero = 1;
 			i++;
 		}
 		if (ft_isdigit(str[i]))
 		{
-			if (!flags->wdt)
-				fl = check_w(str, i);
-			else if (flags->zero && !flags->dot)
-			{
-				newfl = fl - check_w(str, i);
-				fl = check_w(str, i);
-			}
+			fl = check_w(str, i);
 			flags->wdt = 1;
 			i += get_nbrlen(fl);
 		}
@@ -99,11 +107,18 @@ int check_flags(const char *str, int i, t_flags *flags)
 		}
 		if (str[i] == '.')
 		{
-			if (flags->wdt && !ft_isdigit(str[i + 1]))
-				flags->space= 1;
-			else
-				flags->zero = 2;
+			flags->dot = 1;
 			i++;
+			while(str[i] == '0')
+			{
+				flags->zero = 0;
+				i++;
+			}
+			if (check_udicpxX(str, i))
+				flags->zero = 0;
+			newfl = fl;
+			fl = check_w(str, i);
+
 		}
 		if (str[i] == ' ')
 		{
@@ -164,49 +179,71 @@ static unsigned int	get_unbrlen(unsigned int n)
 	return (i);
 }
 
-void print_c(int chr, int count, t_flags *flag, int newfl)
+void print_c(int chr, int count, t_flags *flag)
 {
-
-	if (newfl != 0 || flag->dot)
-		count = 0;
 	if (flag->zero)
 		flag->zero = 0;
 	if (flag->wdt && !flag->dash)
-		treat_dash(flag, count, 1);
+		treat_flag(flag, count, 1);
 	ft_putchar_fd(chr, 1);
 	if (flag->dash && flag->wdt)
-		treat_dash(flag, count, 1);
-	if (newfl > 1)
-		flag->flen += newfl;
-	else
-		flag->flen++;
+		treat_flag(flag, count, 1);
+	flag->flen += 1;
 	reinit_flags(flag);
+}
+
+static int	strlcpydstlen(char *dst, const char *src, int size)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	while (src[i] && i < size - 1)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	len = ft_strlen(dst);
+	if (size == 0)
+		return (len);
+	return (len);
 }
 
 void print_s(char *str, int count, t_flags *flag, int newfl)
 {
 	int len;
+	char *newstr;
+	int  newlen;
 
 	if (!str)
 		str = "(null)";
 	len = ft_strlen(str);
-	if (newfl != 0 || flag->dot)
-		count = 0;
+	newstr = malloc(sizeof(char) * (len + 1));
+	if (!newstr)
+		free(newstr);
+	newlen = len;
 	if (flag->zero)
 		flag->zero = 0;
-	if (flag->wdt && !flag->dash)
-		treat_dash(flag, count, len);
-	ft_putstr_fd(str, 1);
-	if (flag->dash && flag->wdt)
-		treat_dash(flag, count, len);
-	if (newfl > len)
-		flag->flen += newfl;
+	if (flag->wdt && !flag->dash && !flag->dot)
+		treat_flag(flag, count, newlen);
+	if (flag->dot)
+	{
+		newlen = strlcpydstlen(newstr, str, count + 1);
+		ft_putstr_fd(newstr, 1);
+		if (flag->dash)
+			treat_flag(flag, newfl, newlen);
+	}
 	else
-		flag->flen += len;
+		ft_putstr_fd(str, 1);
+	if (flag->dash && flag->wdt && !flag->dot)
+		treat_flag(flag, count, newlen);
+	flag->flen += newlen;
+	free(newstr);
 	reinit_flags(flag);
 }
 
-void treat_dash(t_flags *flag ,int count, int len)
+void treat_flag(t_flags *flag ,int count, int len)
 {
 	if (flag->sign)
 		len++;
@@ -217,48 +254,121 @@ void treat_dash(t_flags *flag ,int count, int len)
 			else
 				ft_putchar_fd(' ', 1);
 			count--;
+			flag->flen++;
 		}
 }
 
-void print_di(int nbr,int i, t_flags *flag, int newfl)
+void	ft_putlongnbr_fd(long int n, int fd)
+{
+	long int	div;
+	long int	result;
+	long int	nbr;
+
+	nbr = n;
+	div = 1;
+	if (n < 0)
+	{
+		nbr = nbr * -1;
+		write (fd, "-", 1);
+	}
+	while (div <= nbr / 10)
+		div = div * 10;
+	while (div > 0)
+	{
+		result = nbr / div + 48;
+		nbr = nbr % div;
+		div = div / 10;
+		write (fd, &result, 1);
+	}
+}
+
+static void	put_long_nbr(int n)
+{
+	long int	nbr;
+
+	nbr = (long int)n * - 1;
+	ft_putlongnbr_fd(nbr, 1);
+}
+
+void print_di(int nbr,int count, t_flags *flag, int newfl)
 {
 	int len;
-	int count;
 	int number;
 
-	count = i;
 	number = nbr;
-	if (nbr < 0)
-		if(flag->dash && !flag->sign)
-			count--;
-	len = get_nbrlen(number);
-	if (nbr < 0 && flag->zero)
+	len = get_nbrlen(nbr);
+	if (nbr < -2147483647)
+		len = 11;
+	if (flag->dot)
+	{
+		if (nbr < 0)
+			count++;
+		if (newfl > count)
 		{
-			ft_putchar_fd('-', 1);
-			newfl--;
-			number *= -1;
+			flag->zero = 0;
+			if(newfl > count && !flag->dash && count > len)
+				treat_flag(flag, newfl, count);
+			if(newfl > count && !flag->dash && count <= len && nbr != 0)
+				treat_flag(flag, newfl, len);
+			if(newfl > count && !flag->dash && count <= len && nbr == 0)
+				treat_flag(flag, newfl, 0);
 		}
-	if (newfl > i)
-		treat_dash(flag, newfl, 0);
-	if (flag->wdt && !flag->dash)
-		treat_dash(flag, count, len);
+		if (nbr < 0)
+		{
+			number *= -1;
+			ft_putchar_fd('-', 1);
+		}
+		if (count > len)
+		{
+			flag->zero = 1;
+			if (count > len && flag->dash)
+				treat_flag(flag, count, len);
+		}
+	}
+	if (nbr < 0 && !flag->dot && flag->zero)
+	{
+		number *= -1;
+		ft_putchar_fd('-', 1);
+	}
+	if (!flag->dash && flag->wdt)
+		treat_flag(flag, count, len);
 	if (flag->space && !flag->wdt && nbr >= 0)
 	{
 		ft_putchar_fd(' ', 1);
 		flag->flen++;
+	}
+	if (nbr < 0 && !flag->dot && !flag->zero)
+	{
+		number *= -1;
+		ft_putchar_fd('-', 1);
 	}
 	if (flag->sign && nbr >= 0)
 	{
 		ft_putchar_fd('+', 1);
 		flag->flen++;
 	}
-	ft_putnbr_fd(number, 1);
-	if (flag->dash && flag->wdt)
-		treat_dash(flag, count, len);
-	if (count > len)
-		flag->flen += count;
-	else
+	if (flag->dot && nbr == 0 && count == 0)
+		treat_flag(flag, 0, 0);
+	else if (nbr < -2147483647)
+	{
+		put_long_nbr(nbr);
 		flag->flen += len;
+	}
+	else
+	{
+		ft_putnbr_fd(number, 1);
+		flag->flen += len;
+	}
+	if (flag->dash && newfl > count && count > len)
+		flag->zero = 0;
+	if (flag->dash && count < newfl && count <= len && nbr != 0)
+		treat_flag(flag, newfl, len);
+	if (flag->dash && count < newfl && count <= len && nbr == 0)
+		treat_flag(flag, newfl, 0);
+	if (flag->dash && newfl > count && count > len)
+		treat_flag(flag, newfl, count);
+	if (flag->dash && !flag->dot)
+		treat_flag(flag, count, len);
 	reinit_flags(flag);
 }
 
@@ -286,26 +396,49 @@ void	ft_putunbr_fd(unsigned int n, int fd)
 	}
 }
 
-void print_u(unsigned int nbr, int i, t_flags *flag, int newfl)
+void print_u(unsigned int nbr, int count, t_flags *flag, int newfl)
 {
 	int len;
-	int count;
 
-	count = i;
 	len = get_unbrlen(nbr);
-	if (newfl > i)
-		treat_dash(flag, newfl, 0);
-	if (flag->wdt && !flag->dash)
-		treat_dash(flag, count, len);
-	if (flag->sign)
-		flag->sign = 0;
-	ft_putunbr_fd(nbr, 1);
-	if (flag->dash && flag->wdt)
-		treat_dash(flag, count, len);
-	if (count > len)
-		flag->flen += count;
+	if (flag->dot)
+	{
+		if (newfl > count)
+		{
+			flag->zero = 0;
+			if(newfl > count && !flag->dash && count > len)
+				treat_flag(flag, newfl, count);
+			if(newfl > count && !flag->dash && count <= len && nbr != 0)
+				treat_flag(flag, newfl, len);
+			if(newfl > count && !flag->dash && count <= len && nbr == 0)
+				treat_flag(flag, newfl, 0);
+		}
+		if (count > len)
+		{
+			flag->zero = 1;
+			if (count > len && flag->dash)
+				treat_flag(flag, count, len);
+		}
+	}
+	if (!flag->dash && flag->wdt)
+		treat_flag(flag, count, len);
+	if (flag->dot && nbr == 0 && count == 0)
+		treat_flag(flag, 0, 0);
 	else
+	{
+		ft_putunbr_fd(nbr, 1);
 		flag->flen += len;
+	}
+	if (flag->dash && newfl > count && count > len)
+		flag->zero = 0;
+	if (flag->dash && count < newfl && count <= len && nbr != 0)
+		treat_flag(flag, newfl, len);
+	if (flag->dash && count < newfl && count <= len && nbr == 0)
+		treat_flag(flag, newfl, 0);
+	if (flag->dash && newfl > count && count > len)
+		treat_flag(flag, newfl, count);
+	if (flag->dash && !flag->dot)
+		treat_flag(flag, count, len);
 	reinit_flags(flag);
 }
 
@@ -320,7 +453,7 @@ void print_hexa (unsigned int i, t_flags *flag)
 		ft_putchar_fd(HEXALOW[i], 1);
 }
 
- static int get_hexaplen(unsigned int i)
+static int get_hexaplen(unsigned int i)
 {
 	int len;
 
@@ -340,7 +473,7 @@ void print_hexa (unsigned int i, t_flags *flag)
 	return (len);
 }
 
-void print_hexap(unsigned int i)
+void print_hexap(unsigned long i)
 {
 	if (i >= 16)
 	{
@@ -351,69 +484,91 @@ void print_hexap(unsigned int i)
 		ft_putchar_fd(HEXALOW[i], 1);
 }
 
-/* static char *make_hexap(unsigned int i)
+static int get_hexaplonglen(unsigned long i)
 {
-	char *str;
-	int j;
+	int len;
 
-	j = get_hexaplen(i) + 1;
-	str = malloc(sizeof(char) * j);
-	str[j] = '\0';
-	/while (i > 0)
+	len = 0;
+	if (i == 0)
+		len = 1;
+	if (i < 0)
 	{
-		if (i >= 16)
-		{
-			i = make_hexapp(i);
-			printf("|%d|", i);
-		}
-		else
-			str[--j] = HEXALOW[i];
+		i *= -1;
+		len++;
 	}
-	printf("%s// %d//", str, j);
-	return (str);
-} */
-
-void print_p(unsigned long i, t_flags *flag)
-{
-	flag->wdt = 1;
-	print_hexap(i);
+	while (i > 0)
+	{
+		i = i / 16;
+		len ++;
+	}
+	return (len);
 }
 
-void print_x(unsigned int i, t_flags *flags, int count, int newfl)
+void print_p(unsigned long i, t_flags *flag, int count)
+{
+	int len;
+
+	len = get_hexaplonglen(i);
+	len += 2;
+	if (!flag->dash && flag->wdt)
+		treat_flag(flag, count, len);
+	ft_putstr_fd("0x", 1);
+	print_hexap(i);
+	flag->flen += len;
+	if (flag->dash && flag->wdt)
+		treat_flag(flag, count, len);
+	reinit_flags(flag);
+}
+
+void print_x(unsigned int i, t_flags *flag, int count, int newfl)
 {
 	int len;
 
 	len = get_hexaplen(i);
-	/* printf("(|%d|-|%d| |%d|)", newfl, count, len); */
-	if (flags->hash && i > 0)
+	if (flag->hash && i > 0)
 	{
 		ft_putstr_fd("0x", 1);
-		flags->flen += 2;
+		flag->flen += 2;
 	}
-	if ((flags->zero == 2 && newfl > len) || newfl > 0)
+	if (flag->dot)
 	{
-		flags->zero = 0;
+		if (newfl > count)
+		{
+			flag->zero = 0;
+			if(newfl > count && !flag->dash && count > len)
+				treat_flag(flag, newfl, count);
+			if(newfl > count && !flag->dash && count <= len && i != 0)
+				treat_flag(flag, newfl, len);
+			if(newfl > count && !flag->dash && count <= len && i == 0)
+				treat_flag(flag, newfl, 0);
+		}
 		if (count > len)
 		{
-			treat_dash(flags, newfl, 0);
-			flags->zero = 1;
-			flags->flen += newfl;
+			flag->zero = 1;
+			if (count > len && flag->dash)
+				treat_flag(flag, count, len);
 		}
-		else
-			treat_dash(flags, newfl + count, len);
 	}
-	if (flags->wdt && !flags->dash)
-		treat_dash(flags, count, len);
-	print_hexa(i, flags);
-	if (flags->dash && flags->wdt)
-		treat_dash(flags, count, len);
- 	if (count > len)
-		flags->flen += count;
-	else if (newfl > len)
-		flags->flen += newfl + count;
+	if (!flag->dash && flag->wdt)
+		treat_flag(flag, count, len);
+	if (flag->dot && i == 0 && count == 0)
+		treat_flag(flag, 0, 0);
 	else
-		flags->flen += len;
-	reinit_flags(flags);
+	{
+		print_hexa(i, flag);
+		flag->flen += len;
+	}
+	if (flag->dash && newfl > count && count > len)
+		flag->zero = 0;
+	if (flag->dash && count < newfl && count <= len && i != 0)
+		treat_flag(flag, newfl, len);
+	if (flag->dash && count < newfl && count <= len && i == 0)
+		treat_flag(flag, newfl, 0);
+	if (flag->dash && newfl > count && count > len)
+		treat_flag(flag, newfl, count);
+	if (flag->dash && !flag->dot)
+		treat_flag(flag, count, len);
+	reinit_flags(flag);
 }
 
 void print_hexaup(unsigned int i, t_flags *flag)
@@ -429,46 +584,63 @@ void print_hexaup(unsigned int i, t_flags *flag)
 	}
 }
 
-void print_xup(unsigned int i, t_flags *flags, int count, int newfl)
+void print_xup(unsigned int i, t_flags *flag, int count, int newfl)
 {
 	int len;
 
 	len = get_hexaplen(i);
-	if (flags->hash && i > 0)
+	if (flag->hash && i > 0)
 	{
 		ft_putstr_fd("0X", 1);
-		flags->flen += 2;
+		flag->flen += 2;
 	}
-	if ((flags->zero == 2 && newfl > len) || newfl > 0)
+	if (flag->dot)
 	{
-		flags->zero = 0;
+		if (newfl > count)
+		{
+			flag->zero = 0;
+			if(newfl > count && !flag->dash && count > len)
+				treat_flag(flag, newfl, count);
+			if(newfl > count && !flag->dash && count <= len && i != 0)
+				treat_flag(flag, newfl, len);
+			if(newfl > count && !flag->dash && count <= len && i == 0)
+				treat_flag(flag, newfl, 0);
+		}
 		if (count > len)
 		{
-			treat_dash(flags, newfl, 0);
-			flags->zero = 1;
-			flags->flen += newfl;
+			flag->zero = 1;
+			if (count > len && flag->dash)
+				treat_flag(flag, count, len);
 		}
-		else
-			treat_dash(flags, newfl + count, len);
 	}
-	if (flags->wdt && !flags->dash)
-		treat_dash(flags, count, len);
-	print_hexaup(i, flags);
-	if (flags->dash && flags->wdt)
-		treat_dash(flags, count, len);
- 	if (count > len)
-		flags->flen += count;
-	else if (newfl > len)
-		flags->flen += newfl + count;
+	if (!flag->dash && flag->wdt)
+		treat_flag(flag, count, len);
+	if (flag->dot && i == 0 && count == 0)
+		treat_flag(flag, 0, 0);
 	else
-		flags->flen += len;
-	reinit_flags(flags);
+	{
+		print_hexaup(i, flag);
+		flag->flen += len;
+	}
+	if (flag->dash && newfl > count && count > len)
+		flag->zero = 0;
+	if (flag->dash && count < newfl && count <= len && i != 0)
+		treat_flag(flag, newfl, len);
+	if (flag->dash && count < newfl && count <= len && i == 0)
+		treat_flag(flag, newfl, 0);
+	if (flag->dash && newfl > count && count > len)
+		treat_flag(flag, newfl, count);
+	if (flag->dash && !flag->dot)
+		treat_flag(flag, count, len);
+	reinit_flags(flag);
 }
 
 int print_char(t_flags *flag , const char *str, int i, int fl, int newfl)
 {
+	if (flag->dash && flag->zero)
+		flag->zero = 0;
 	if (str[i] == 'c')
-		print_c(va_arg(flag->args, int), fl, flag, newfl);
+		print_c(va_arg(flag->args, int), fl, flag);
 	if (str[i] == 's')
 		print_s(va_arg(flag->args, char *), fl, flag, newfl);
 	if (str[i] == 'd' || str[i] == 'i')
@@ -476,7 +648,7 @@ int print_char(t_flags *flag , const char *str, int i, int fl, int newfl)
 	if (str[i] == 'u')
 		print_u(va_arg(flag->args, unsigned int), fl, flag, newfl);
 	if (str[i] == 'p')
-		print_p(va_arg(flag->args, unsigned long), flag);
+		print_p(va_arg(flag->args, unsigned long), flag, fl);
 	if (str[i] == 'x')
 		print_x(va_arg(flag->args, unsigned int), flag, fl, newfl);
 	if (str[i] == 'X')
@@ -518,12 +690,12 @@ int	ft_printf(const char *str, ...)
 	return (len);
 }
 
-/*  int main()
+/* int main()
 {
-	int x = -50;
+	int x = 0;
 	int *ptr = &x;
 	char *Y = "Marreco";
 	char *null_str = NULL;
-	ft_printf("%014Xc%020Xs%02.5XX%0.Xi \n", -1, 3, 30, -1);
-	printf("%14Xc%20Xs%02.5XX%0.Xi \n", -1, 3, 30, -1);
+	ft_printf("%-1p %-2p MINHA\n", ptr, ptr);
+	printf("%-1p %-2p ORIGINAL\n", ptr, ptr);
 } */
