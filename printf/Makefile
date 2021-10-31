@@ -6,7 +6,7 @@
 #    By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/26 11:24:12 by ygomes-d          #+#    #+#              #
-#    Updated: 2021/10/26 15:29:48 by ygomes-d         ###   ########.fr        #
+#    Updated: 2021/10/31 15:22:17 by ygomes-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,17 @@ CC =	clang
 
 CFLAGS =	-Wall -Werror -Wextra
 
-SRCS =	ft_printf.c
+SRCS =	ft_printf.c \
+		treat_flag_dotndash.c \
+		get_length.c \
+		check_case_conversion.c \
+		make_cs.c \
+		make_di.c \
+		check_flags.c \
+		treat_flags.c \
+		make_up.c \
+		make_xX.c \
+
 
 OBJS =	$(SRCS:.c=.o)
 

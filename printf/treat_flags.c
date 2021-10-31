@@ -1,42 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   treat_flags.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/06 19:26:48 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:22:41 by ygomes-d         ###   ########.fr       */
+/*   Created: 2021/10/31 14:48:10 by ygomes-d          #+#    #+#             */
+/*   Updated: 2021/10/31 14:49:30 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printf(const char *str, ...)
+void	treat_flag(t_flags *flag ,int count, int len)
 {
-	int i;
-	int len;
-	t_flags *flags;
-
-	flags = (t_flags *)malloc(sizeof(t_flags));
-	if (!flags)
-		return (0);
-	va_start(flags->args, str);
-	i = -1;
-	len = 0;
-	init_flags(flags);
-	while (str[++i])
-	{
-		if (str[i] == '%')
-			i = check_flags(str, i + 1, flags);
-		else
+	if (flag->sign)
+		len++;
+	while (count - len > 0)
 		{
-			ft_putchar_fd(str[i], 1);
-			flags->flen++;
+			if (flag->zero)
+				ft_putnbr_fd(0, 1);
+			else
+				ft_putchar_fd(' ', 1);
+			count--;
+			flag->flen++;
 		}
-	}
-	len = flags->flen;
-	va_end (flags->args);
-	free (flags);
-	return (len);
+}
+
+void	treat_space(t_flags *flag)
+{
+	ft_putchar_fd(' ', 1);
+	flag->flen++;
+}
+
+void	treat_sign(t_flags *flag)
+{
+	ft_putchar_fd('+', 1);
+	flag->flen++;
+}
+
+int	treat_neg(int nbr)
+{
+		nbr *= -1;
+		ft_putchar_fd('-', 1);
+		return(nbr);
 }
