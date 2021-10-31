@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 08:36:47 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/30 11:45:53 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/10/31 09:58:58 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_flags
 	int space;
 	int hash;
 	int flen;
+	int nbrlen;
 }	t_flags;
 
 int	ft_printf(const char *str, ...);
@@ -47,6 +48,9 @@ void print_hexa (unsigned int i, t_flags *flag);
 void print_hexap(unsigned long i);
 static int get_hexaplonglen(unsigned long i);
 void print_p(unsigned long i, t_flags *flag, int count);
+static void	treat_dot_flag_upxX(unsigned int nbr, t_flags *flag, int count, int newfl);
+static int	treat_dot_flag_di(int nbr, t_flags *flag, int count, int newfl);
+static void treat_dash_flag(unsigned int nbr, t_flags *flag, int count, int newfl);
 void print_x(unsigned int i, t_flags *flags, int count, int newfl);
 void print_hexaup(unsigned int i, t_flags *flag);
 void print_xup(unsigned int i, t_flags *flags, int count, int newfl);
