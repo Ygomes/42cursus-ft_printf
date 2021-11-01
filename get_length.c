@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 12:36:02 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 12:38:08 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:08:55 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 int	get_nbrlen( int n)
 {
-	 int	i;
-	 int	nbr;
+	int	i;
+	int	nbr;
 
 	i = 0;
 	nbr = n;
 	if (n == 0)
 		i = 1;
- 	if (nbr < 0)
+	if (nbr < 0)
 	{
 		nbr *= -1;
 		i++;
@@ -43,7 +43,7 @@ unsigned int	get_unbrlen(unsigned int n)
 	nbr = n;
 	if (n == 0)
 		i = 1;
- 	if (nbr < 0)
+	if (nbr < 0)
 	{
 		nbr *= -1;
 		i++;
@@ -76,7 +76,7 @@ int	strlcpydstlen(char *dst, const char *src, int size)
 
 int	get_hexaplen(unsigned int i)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	if (i == 0)
@@ -96,7 +96,7 @@ int	get_hexaplen(unsigned int i)
 
 int	get_hexaplonglen(unsigned long i)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	if (i == 0)

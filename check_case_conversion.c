@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 12:42:02 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:23:13 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:12:26 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ int	check_dotwdt(const char *str, int i, t_flags *flag)
 	{
 		flag->dot = 1;
 		i++;
-		while(str[i] == '0')
+		while (str[i] == '0')
 		{
 			flag->zero = 0;
 			i++;
 		}
-		if (check_udicpxX(str, i))
+		if (check_udicpxx(str, i))
 			flag->zero = 0;
 		flag->newprc = flag->prc;
 		flag->prc = check_w(str, i);
@@ -63,7 +63,7 @@ int	check_dotwdt(const char *str, int i, t_flags *flag)
 	return (i);
 }
 
-int	check_udicpxX(const char *str, int i)
+int	check_udicpxx(const char *str, int i)
 {
 	if (str[i] == 'u')
 		return (1);
@@ -85,7 +85,7 @@ int	check_udicpxX(const char *str, int i)
 
 int	check_w(const char *str, int i)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (ft_isdigit(str[i]))
@@ -96,12 +96,12 @@ int	check_w(const char *str, int i)
 	return (len);
 }
 
-int	check_conversion_case(t_flags *flag , const char *str, int i)
+int	check_conversion_case(t_flags *flag, const char *str, int i)
 {
 	if (flag->dash && flag->zero)
 		flag->zero = 0;
 	if (str[i] == 'c')
-		print_c(va_arg(flag->args, int),flag);
+		print_c(va_arg(flag->args, int), flag);
 	if (str[i] == 's')
 		print_s(va_arg(flag->args, char *), flag);
 	if (str[i] == 'd' || str[i] == 'i')

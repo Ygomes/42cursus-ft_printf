@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 11:46:17 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 14:46:12 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:06:28 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ void	treat_dot_flag_di(int nbr, t_flags *flag)
 	if (flag->newprc > flag->prc)
 	{
 		flag->zero = 0;
-		if(!flag->dash && flag->prc > flag->nbrlen)
+		if (!flag->dash && flag->prc > flag->nbrlen)
 			treat_flag(flag, flag->newprc, flag->prc);
-		if(!flag->dash && flag->prc <= flag->nbrlen && nbr != 0)
+		if (!flag->dash && flag->prc <= flag->nbrlen && nbr != 0)
 			treat_flag(flag, flag->newprc, flag->nbrlen);
-		if(!flag->dash && flag->prc <= flag->nbrlen && nbr == 0)
+		if (!flag->dash && flag->prc <= flag->nbrlen && nbr == 0)
 			treat_flag(flag, flag->newprc, 0);
 	}
 	if (nbr < 0)
@@ -36,16 +36,16 @@ void	treat_dot_flag_di(int nbr, t_flags *flag)
 	}
 }
 
-void	treat_dot_flag_upxX(unsigned int nbr, t_flags *flag)
+void	treat_dot_flag_upxx(unsigned int nbr, t_flags *flag)
 {
 	if (flag->newprc > flag->prc)
 	{
 		flag->zero = 0;
-		if(!flag->dash && flag->prc > flag->nbrlen)
+		if (!flag->dash && flag->prc > flag->nbrlen)
 			treat_flag(flag, flag->newprc, flag->prc);
-		if(!flag->dash && flag->prc <= flag->nbrlen && nbr != 0)
+		if (!flag->dash && flag->prc <= flag->nbrlen && nbr != 0)
 			treat_flag(flag, flag->newprc, flag->nbrlen);
-		if(!flag->dash && flag->prc <= flag->nbrlen && nbr == 0)
+		if (!flag->dash && flag->prc <= flag->nbrlen && nbr == 0)
 			treat_flag(flag, flag->newprc, 0);
 	}
 	if (flag->prc > flag->nbrlen)
@@ -56,7 +56,7 @@ void	treat_dot_flag_upxX(unsigned int nbr, t_flags *flag)
 	}
 }
 
-void treat_dash_flag(unsigned int nbr, t_flags *flag)
+void	treat_dash_flag(unsigned int nbr, t_flags *flag)
 {
 	if (flag->newprc > flag->prc && flag->prc > flag->nbrlen)
 		flag->zero = 0;

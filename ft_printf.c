@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 19:26:48 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:22:41 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:30:01 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	ft_printf(const char *str, ...)
 {
-	int i;
-	int len;
-	t_flags *flags;
+	int		i;
+	int		len;
+	t_flags	*flags;
 
 	flags = (t_flags *)malloc(sizeof(t_flags));
 	if (!flags)

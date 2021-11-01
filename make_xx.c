@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_xX.c                                          :+:      :+:    :+:   */
+/*   make_xx.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 15:21:29 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:22:05 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:28:56 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	print_x(unsigned int nbr, t_flags *flag)
 		flag->flen += 2;
 	}
 	if (flag->dot)
-		treat_dot_flag_upxX(nbr, flag);
+		treat_dot_flag_upxx(nbr, flag);
 	if (!flag->dash && flag->wdt)
 		treat_flag(flag, flag->prc, flag->nbrlen);
 	if (flag->dot && nbr == 0 && flag->prc == 0)
@@ -58,7 +58,7 @@ void	print_xup(unsigned int nbr, t_flags *flag)
 		flag->flen += 2;
 	}
 	if (flag->dot)
-		treat_dot_flag_upxX(nbr, flag);
+		treat_dot_flag_upxx(nbr, flag);
 	if (!flag->dash && flag->wdt)
 		treat_flag(flag, flag->prc, flag->nbrlen);
 	if (flag->dot && nbr == 0 && flag->prc == 0)

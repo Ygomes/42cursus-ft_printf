@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_di.c                                         :+:      :+:    :+:   */
+/*   make_di.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 14:50:22 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:02:21 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 09:55:39 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_di(int nbr, t_flags *flag)
 {
-	int number;
+	int	number;
 
 	number = nbr;
 	flag->nbrlen = get_nbrlen(nbr);
@@ -60,7 +60,7 @@ void	put_long_nbr(int n)
 {
 	long int	nbr;
 
-	nbr = (long int)n * - 1;
+	nbr = (long int) n * -1;
 	ft_putlongnbr_fd(nbr, 1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 15:19:06 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:20:02 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:27:55 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_u(unsigned int nbr, t_flags *flag)
 {
 	flag->nbrlen = get_unbrlen(nbr);
 	if (flag->dot)
-		treat_dot_flag_upxX(nbr, flag);
+		treat_dot_flag_upxx(nbr, flag);
 	if (!flag->dash && flag->wdt)
 		treat_flag(flag, flag->prc, flag->nbrlen);
 	if (flag->dot && nbr == 0 && flag->prc == 0)
@@ -31,7 +31,7 @@ void	print_u(unsigned int nbr, t_flags *flag)
 	reinit_flags(flag);
 }
 
-void	print_hexa (unsigned int i, t_flags *flag)
+void	print_hexa(unsigned int i, t_flags *flag)
 {
 	if (i >= 16)
 	{

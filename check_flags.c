@@ -6,7 +6,7 @@
 /*   By: ygomes-d <ygomes-d@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 14:38:23 by ygomes-d          #+#    #+#             */
-/*   Updated: 2021/10/31 15:23:34 by ygomes-d         ###   ########.fr       */
+/*   Updated: 2021/11/01 10:50:48 by ygomes-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	check_flags(const char *str, int i, t_flags *flag)
 {
-	char *check;
-	int j;
+	char	*check;
+	int		j;
 
 	j = -1;
 	check = "udicspxX%";
@@ -31,11 +31,11 @@ int	check_flags(const char *str, int i, t_flags *flag)
 			i++;
 		}
 	}
-	check_conversion_case(flag ,str, i);
+	check_conversion_case(flag, str, i);
 	return (i);
 }
 
-t_flags	*init_flags(t_flags  *flag)
+t_flags	*init_flags(t_flags *flag)
 {
 	flag->wdt = 0;
 	flag->zero = 0;
@@ -44,14 +44,14 @@ t_flags	*init_flags(t_flags  *flag)
 	flag->sign = 0;
 	flag->space = 0;
 	flag->hash = 0;
-	flag->flen= 0;
+	flag->flen = 0;
 	flag->nbrlen = 0;
 	flag->prc = 0;
 	flag->newprc = 0;
 	return (flag);
 }
 
-t_flags	*reinit_flags(t_flags  *flag)
+t_flags	*reinit_flags(t_flags *flag)
 {
 	flag->wdt = 0;
 	flag->zero = 0;
