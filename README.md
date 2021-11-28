@@ -1,5 +1,4 @@
-This project is pretty straight forward. You will recode printf. Fortunetaly
-you will be able to reuse it in future projects as a legit function of your libft.
+This project is pretty straight forward. I had to recode printf. Fortunetaly I`ll be able to reuse it in future projects as a legit function of your libft.
 
 # TLDR: this project consists of recoding a simplified version of the printf function.
 
